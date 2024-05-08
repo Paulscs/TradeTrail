@@ -12,6 +12,7 @@ public class Item {
     private String description;
     private double price;
     private String imageUrl; // path to image
+    private String categoryName;
 
     public Item(int userId, String productName, int categoryId, String description, double price, String imageUrl) {
         this.userId = userId;
@@ -22,7 +23,7 @@ public class Item {
         this.imageUrl = imageUrl;
     }
 
-    //constructor for GetAllItems()
+    //constructor for GetAllItems2()
     public Item(int itemId, int userId, String productName, int categoryId, String description, double price, String imageUrl) {
         this.itemId = itemId;
         this.userId = userId;
@@ -31,6 +32,18 @@ public class Item {
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    //Constructor for getAllItemsWithCategoryName()
+    public Item(int itemId, int userId, String productName, int categoryId, String description, double price, String imageUrl, String categoryName) {
+        this.itemId = itemId;
+        this.userId = userId;
+        this.productName = productName;
+        this.categoryId = categoryId;
+        this.description = description;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.categoryName = categoryName;
     }
 
 

@@ -50,6 +50,6 @@ window.addEventListener('DOMContentLoaded', event => {
             }
         });
     });
-
-
 });
+
+

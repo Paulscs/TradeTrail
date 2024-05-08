@@ -30,11 +30,9 @@ public class ProductServlet extends HttpServlet {
         List<Item> items = itemDAO.getAllItems();
         System.out.println("Retrieved items: " + items);
 
-        // Set the items and userDAO as request attribute
         request.setAttribute("items", items);
         request.setAttribute("userDAO", userDAO);
 
-        // Forward to index.jsp where products are displayed
         request.getRequestDispatcher("/index.jsp").forward(request, response);
 
         System.out.println("Exiting ProductServlet doGet method"); // Log exit point

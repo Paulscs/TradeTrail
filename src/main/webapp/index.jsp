@@ -11,9 +11,8 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.google.gson.Gson" %>
-<%-- Import UserDAO class if not already imported --%>
+
 <%@ page import="model.UserDAO" %>
-<%-- Retrieve the UserDAO object from request attribute --%>
 <% UserDAO userDAO = (UserDAO) request.getAttribute("userDAO"); %>
 
 

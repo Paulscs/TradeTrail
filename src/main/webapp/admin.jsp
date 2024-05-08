@@ -11,8 +11,10 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="model.UserDAO" %>
+<%@ page import="model.ItemDAO" %>
 <%@ page import="com.google.gson.Gson" %>
 <% UserDAO userDAO = (UserDAO) request.getAttribute("userDAO"); %>
+<% ItemDAO itemDAO = (ItemDAO) request.getAttribute("itemDAO"); %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,16 +28,13 @@
 <!-- Favicon-->
 <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
 <!-- Font Awesome icons (free version)-->
-<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
-	crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
 <!-- Google fonts-->
-<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
-	rel="stylesheet" type="text/css" />
-<link
-	href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic"
-	rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
 <!-- Core theme CSS (includes Bootstrap)-->
 <link href="css/index-styles.css" rel="stylesheet" />
+
 	<!-- Bootstrap CSS -->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Bootstrap datatable css -->
@@ -57,6 +56,9 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ms-auto">
+					<% if ((boolean)session.getAttribute("admin")) { %>
+					<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="admin">Admin</a></li>
+					<% } %>
 					<li class="nav-item mx-0 mx-lg-1"><a
 						class="nav-link py-3 px-0 px-lg-3 rounded" href="products">Market</a></li>
 					<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="sell">Sell</a></li>
@@ -71,7 +73,7 @@
 		</div>
 	</nav>
 	<!-- Datatable-->
-	<table class="table table-striped">
+	<table id="producttable" class="table table-striped" style="width:100%; margin-top: 60px;">
 		<thead>
 		<tr>
 			<th>ID</th>
@@ -83,24 +85,55 @@
 		</tr>
 		</thead>
 		<tbody>
-		<!-- Loop through product data and populate table rows -->
-		<% for (Item item : products) { %>
+		<!-- Loop through product data to fill up the table rows -->
+		<%
+			Object products2 = request.getAttribute("products2");
+			if (products2 instanceof List) {
+				List<Item> productList = (List<Item>) products2;
+				for (Item item : productList) {
+		%>
 		<tr>
 			<td><%= item.getItemId() %></td>
 			<td><%= item.getProductName() %></td>
-			<td><%= item.getCategory() %></td>
+			<td><%= item.getCategoryId() %></td>
 			<td><%= item.getDescription() %></td>
 			<td><%= item.getPrice() %></td>
+			<!-- Add buttons for delete and edit actions -->
 			<td>
-				<!-- Buttons for delete and edit actions -->
-				<button class="btn btn-danger delete-btn" data-id="<%= item.getItemId() %>">Delete</button>
+				<button class="btn btn-danger delete-btn" data-id="<%= item.getItemId() %>" onclick="deleteItem(<%= item.getItemId() %>)">Delete</button>
 				<button class="btn btn-primary edit-btn" data-id="<%= item.getItemId() %>">Edit</button>
 			</td>
 		</tr>
-		<% } %>
+		<%
+				}
+			} else {
+				out.println("No products retrieved in JSP");
+			}
+		%>
 		</tbody>
 	</table>
 	</div>
+	<!-- Hidden form for editing an item -->
+	<form id="editForm" style="display: none;">
+		<input type="hidden" id="editItemId" name="itemId">
+		<div class="mb-3">
+			<label for="editTitle" class="form-label">Title</label>
+			<input type="text" class="form-control" id="editTitle" name="title">
+		</div>
+		<div class="mb-3">
+			<label for="editCategory" class="form-label">Category</label>
+			<input type="text" class="form-control" id="editCategory" name="category">
+		</div>
+		<div class="mb-3">
+			<label for="editDescription" class="form-label">Description</label>
+			<textarea class="form-control" id="editDescription" name="description"></textarea>
+		</div>
+		<div class="mb-3">
+			<label for="editPrice" class="form-label">Price</label>
+			<input type="text" class="form-control" id="editPrice" name="price">
+		</div>
+		<button type="button" class="btn btn-primary" id="saveEdit">Save Changes</button>
+	</form>
 	<!-- Footer-->
 	<footer class="footer text-center">
 		<div class="container">
@@ -123,48 +156,95 @@
 		</div>
 	</div>
 
-
-	<script>
-		// handle filter change event
-		document.getElementById("categoryFilter").addEventListener("change", function() {
-			var selectedCategory = this.value;
-			if (selectedCategory === "all") {
-				// if "all categories" is selected, display all items
-				showAllItems();
-			} else {
-				filterItems(selectedCategory);
-			}
-		});
-
-		// function to filter items based on category
-		function filterItems(category) {
-			var items = document.querySelectorAll(".portfolio-item");
-			items.forEach(function(item) {
-				var itemCategory = item.dataset.category;
-				if (itemCategory === category) {
-					item.style.display = "block";
-				} else {
-					item.style.display = "none";
-				}
-			});
-		}
-
-		// function to show all items
-		function showAllItems() {
-			var items = document.querySelectorAll(".portfolio-item");
-			items.forEach(function(item) {
-				item.style.display = "block";
-			});
-		}
-	</script>
-
+	<!-- jquery with a hopefully functioning cdn-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<!-- Bootstrap core JS-->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 	<!-- Bootstrap datable-->
-	<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+	<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 	<!-- Bootstrap datable integration-->
-	<script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+	<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
 	<!-- Core theme JS-->
 	<script src="js/scripts.js"></script>
+	<script>
+		$(document).ready(function () {
+			new DataTable('#producttable');
+		});
+	</script>
+	<script>
+		function deleteItem(itemId) {
+			fetch('/admin', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: 'itemId=' + encodeURIComponent(itemId),
+			})
+					.then(response => {
+						if (response.ok) {
+							//refresh datatable
+							location.reload();
+						} else {
+							console.error('Failed to delete item');
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+		}
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			// Edit button click event handler
+			$('.edit-btn').click(function () {
+				var itemId = $(this).data('id');
+
+				// AJAX request to fetch item details
+				$.ajax({
+					type: 'GET',
+					url: '/updateItem', // Update the URL to your servlet endpoint
+					data: {itemId: itemId},
+					success: function (response) {
+						// Populate form fields with item details
+						$('#editItemId').val(response.itemId);
+						$('#editTitle').val(response.title);
+						$('#editCategory').val(response.categoryId); // Assuming you have categoryId in the response
+						$('#editDescription').val(response.description);
+						$('#editPrice').val(response.price);
+
+						// Show the edit form
+						$('#editForm').show();
+					},
+					error: function () {
+						alert('Failed to fetch item details.');
+					}
+				});
+			});
+
+			// Save edit button click event handler
+			$('#saveEdit').click(function () {
+				// Serialize form data
+				var formData = $('#editForm').serialize();
+
+				// AJAX request to update item
+				$.ajax({
+					type: 'POST',
+					url: '/updateItem', // Update the URL to your servlet endpoint
+					data: formData,
+					success: function (response) {
+						// Handle success
+						console.log('Item updated successfully');
+						// Optionally, redirect to another page or update UI
+					},
+					error: function () {
+						// Handle error
+						alert('Failed to update item.');
+					}
+				});
+			});
+		});
+	</script>
+
 </body>
 </html>

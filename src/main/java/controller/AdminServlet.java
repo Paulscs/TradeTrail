@@ -7,32 +7,48 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import model.Item;
-import model.User;
 import model.ItemDAO;
-import model.UserDAO;
+
 
 @WebServlet(name = "AdminServlet", value = "/admin")
 public class AdminServlet extends HttpServlet {
 
     public void init() {
         ItemDAO itemDAO = new ItemDAO();
+        getServletContext().setAttribute("itemDAO", itemDAO);
     }
 
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ItemDAO itemDAO = new ItemDAO();
+        ItemDAO itemDAO = (ItemDAO) getServletContext().getAttribute("itemDAO");
 
-        // Retrieve all products from the database
-        List<Item> products = ItemDAO.getAllItems2();
+        // Retrieve all products from db
+        List<Item> products2 = itemDAO.getAllItems2();
+        System.out.println("Products retrieved in admin servlet: " + products2);
 
-        // Set the retrieved products as an attribute in the request object
-        request.setAttribute("products", products);
 
-        // Forward the request to the admin.jsp page
+        request.setAttribute("products2", products2);
         request.getRequestDispatcher("/admin.jsp").forward(request, response);
     }
 
-
+    //delete post method
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // get the item ID to delete
+        int itemIdToDelete = Integer.parseInt(request.getParameter("itemId"));
 
+        // delete the item
+        ItemDAO itemDAO = (ItemDAO) getServletContext().getAttribute("itemDAO");
+        boolean deletionSuccess = itemDAO.deleteItem(itemIdToDelete);
+
+        //debugging purposes
+        if (deletionSuccess) {
+            System.out.println("Item deleted successfully with ID: " + itemIdToDelete);
+        } else {
+            System.out.println("Failed to delete item with ID: " + itemIdToDelete);
+        }
+
+        response.sendRedirect(request.getContextPath() + "/admin");
     }
+
+
 }
