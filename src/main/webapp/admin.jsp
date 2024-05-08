@@ -10,12 +10,9 @@
 <%@ page import="java.util.stream.Stream" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
-<%@ page import="com.google.gson.Gson" %>
-<%-- Import UserDAO class if not already imported --%>
 <%@ page import="model.UserDAO" %>
-<%-- Retrieve the UserDAO object from request attribute --%>
+<%@ page import="com.google.gson.Gson" %>
 <% UserDAO userDAO = (UserDAO) request.getAttribute("userDAO"); %>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,40 +36,10 @@
 	rel="stylesheet" type="text/css" />
 <!-- Core theme CSS (includes Bootstrap)-->
 <link href="css/index-styles.css" rel="stylesheet" />
-	<style>
-		.portfolio-item {
-			border: 1px solid #ccc;
-			border-radius: 5px;
-			padding: 20px;
-			text-align: center;
-			height: 500px;
-		}
-		.product-desc {
-			max-height: calc(1.2em * 3);
-			overflow: hidden;
-			text-overflow: ellipsis;
-			display: -webkit-box;
-			-webkit-line-clamp: 2;
-			-webkit-box-orient: vertical;
-		}
-		.portfolio-item img {
-			height: 200px; /* Adjust this value as needed */
-			width: auto; /* Maintain aspect ratio */
-			display: block; /* Ensure the image is a block element */
-			margin: 0 auto;
-		}
-		.product-content{
-			text-align: center;
-		}
-		.product-dropdown{
-			padding-top: 125px;
-		}
-		.dropdown-button-filter{
-			display: block;
-			margin: auto;
-		}
-
-	</style>
+	<!-- Bootstrap CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Bootstrap datatable css -->
+	<link href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" rel="stylesheet">
 </head>
 <body id="page-top">
 	<!-- Navigation-->
@@ -90,9 +57,6 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ms-auto">
-                    <% if ((boolean)session.getAttribute("admin")) { %>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="admin">Admin</a></li>
-                    <% } %>
 					<li class="nav-item mx-0 mx-lg-1"><a
 						class="nav-link py-3 px-0 px-lg-3 rounded" href="products">Market</a></li>
 					<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="sell">Sell</a></li>
@@ -106,62 +70,37 @@
 			</div>
 		</div>
 	</nav>
-	<!-- Dropdown menu for category filter -->
-	<div class="container product-dropdown">
-		<select id="categoryFilter" class="dropdown-button-filter">
-			<option value="all">All Categories</option>
-			<% List<String> categories = (List<String>) request.getAttribute("categories"); %>
-			<% if (categories != null && !categories.isEmpty()) { %>
-			<% for (String category : categories) { %>
-			<option value="<%= category %>"><%= category %></option>
-			<% } %>
-			<% } %>
-		</select>
+	<!-- Datatable-->
+	<table class="table table-striped">
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Title</th>
+			<th>Category</th>
+			<th>Description</th>
+			<th>Price</th>
+			<th>Actions</th>
+		</tr>
+		</thead>
+		<tbody>
+		<!-- Loop through product data and populate table rows -->
+		<% for (Item item : products) { %>
+		<tr>
+			<td><%= item.getItemId() %></td>
+			<td><%= item.getProductName() %></td>
+			<td><%= item.getCategory() %></td>
+			<td><%= item.getDescription() %></td>
+			<td><%= item.getPrice() %></td>
+			<td>
+				<!-- Buttons for delete and edit actions -->
+				<button class="btn btn-danger delete-btn" data-id="<%= item.getItemId() %>">Delete</button>
+				<button class="btn btn-primary edit-btn" data-id="<%= item.getItemId() %>">Edit</button>
+			</td>
+		</tr>
+		<% } %>
+		</tbody>
+	</table>
 	</div>
-
-	<%-- Section to Showcase Products --%>
-	<section class="page-section portfolio" id="products">
-		<div class="container">
-			<!-- Section Heading -->
-			<h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Products</h2>
-			<!-- Divider -->
-			<div class="divider-custom">
-				<div class="divider-custom-line"></div>
-				<div class="divider-custom-icon">
-					<i class="fas fa-star"></i>
-				</div>
-				<div class="divider-custom-line"></div>
-			</div>
-			<!-- Product Grid -->
-			<div class="row justify-content-center">
-				<% List<Item> items = (List<Item>) request.getAttribute("items"); %>
-				<% if (items != null && !items.isEmpty()) { %>
-				<% for (Item item : items) { %>
-				<div class="col-md-6 col-lg-4 mb-5" data-category="<%= item.getCategory() %>">
-					<div class="portfolio-item mx-auto">
-						<!-- Display User Name -->
-						<h4 class="product-content">Posted by: <%= userDAO.getUsernameById(item.getUserId()) %></h4>
-						<!-- Product Image -->
-						<img class="img-fluid" src="<%= item.getImageUrl() %>" alt="<%= item.getProductName() %>" />
-						<!-- Product Title -->
-						<h3 class="product-content"><%= item.getProductName() %></h3>
-						<!-- Product Description -->
-						<p class="product-content product-desc"><%= item.getDescription() %></p>
-						<!-- Button to View More Details -->
-						<a class="btn btn-primary product-content" href="product-details.jsp?id=<%= item.getItemId() %>">Contact Seller</a>
-					</div>
-				</div>
-				<% } %>
-				<% } else { %>
-				<p>No items available</p>
-				<% } %>
-			</div>
-		</div>
-	</section>
-
-
-
-
 	<!-- Footer-->
 	<footer class="footer text-center">
 		<div class="container">
@@ -220,8 +159,11 @@
 	</script>
 
 	<!-- Bootstrap core JS-->
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Bootstrap datable-->
+	<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+	<!-- Bootstrap datable integration-->
+	<script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
 	<!-- Core theme JS-->
 	<script src="js/scripts.js"></script>
 </body>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Sign Up Form by Colorlib</title>
+<title>Sign Up Form</title>
 
 <!-- Font Icon -->
 <link rel="stylesheet"
@@ -15,6 +15,7 @@
 </head>
 <body>
 
+<input type="hidden" id="status" value="<%= request.getAttribute("status")%>">
 	<div class="main">
 
 		<!-- Sign up form -->
@@ -24,7 +25,7 @@
 					<div class="signup-form">
 						<h2 class="form-title">Sign up</h2>
 					
-						<form method="" action="" class="register-form"
+						<form method="post" action="register" class="register-form"
 							id="register-form">
 							<div class="form-group">
 								<label for="name"><i
@@ -40,7 +41,7 @@
 									type="password" name="pass" id="pass" placeholder="Password" />
 							</div>
 							<div class="form-group">
-								<label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+								<label for="re_pass"><i class="zmdi zmdi-lock-outline"></i></label>
 								<input type="password" name="re_pass" id="re_pass"
 									placeholder="Repeat your password" />
 							</div>
@@ -78,9 +79,15 @@
 	<!-- JS -->
 	<script src="vendor/jquery/jquery.min.js"></script>
 	<script src="js/main.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<link rel="stylesheet" href="alert/dist/sweetalert.css">
 
-
-
+<script type="text/javascript">
+	var status = document.getElementById("status").value;
+	if(status == "success"){
+		swal("Congrats", "Account created succesfully!", "success")
+	}
+</script>
 </body>
 <!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

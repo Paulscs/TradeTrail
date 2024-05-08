@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,8 +41,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
+                <% if ((boolean)session.getAttribute("admin")) { %>
+                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="admin">Admin</a></li>
+                <% } %>
                 <li class="nav-item mx-0 mx-lg-1"><a
-                        class="nav-link py-3 px-0 px-lg-3 rounded" href="#market">Market</a></li>
+                        class="nav-link py-3 px-0 px-lg-3 rounded" href="products">Market</a></li>
                 <li class="nav-item mx-0 mx-lg-1 active"><a
                         class="nav-link py-3 px-0 px-lg-3 rounded" href="sell.jsp">Sell</a></li>
                 <li class="nav-item mx-0 mx-lg-1"><a
@@ -68,10 +73,30 @@
         <!-- Sell Product Form -->
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <form action="addProductServlet" method="post">
+                <form action="addProductServlet" method="post" enctype="multipart/form-data">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="productName" name="productName" placeholder="Product Name" required>
                         <label for="productName">Product Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select name="category" class="form-select" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <%
+                                List<String> categories = (List<String>) request.getAttribute("categories");
+                                if (categories != null) {
+                                    for (String category : categories) {
+                            %>
+                            <option value="<%= category %>"><%= category %></option>
+                            <%
+                                    }
+                                }
+                            %>
+                        </select>
+                        <input type="hidden" id="categoryId" name="categoryId">
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*" required>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="description" name="description" placeholder="Description" required>
