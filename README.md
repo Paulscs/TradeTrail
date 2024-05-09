@@ -28,11 +28,11 @@ TradeTrail is an online marketplace application built with Java EE (Enterprise E
 
 3. **Build and Deploy:** Build the project using your preferred IDE or build tool (I personally used Intellij IDEA Ultimate). Deploy the application to a Java EE server, I used Apache Tomcat 10.1.20.
 
-4. **Access the Application:** Once deployed, access the application through your web browser using the appropriate URL.
+4. **Access the Application:** Once deployed, access the application through your web browser using http://localhost:8080.
 
 ## Usage
 
 - **Register/Login:** Create a new account or log in with existing credentials.
 - **Browse Products:** Explore the available products listed on the marketplace.
 - **Sell Items:** Add new items to the marketplace for other users to purchase.
-- **Admin Dashboard:** Access additional features like managing products if logged in as an admin user.
+- **Admin Dashboard:** Access additional features like managing products if logged in as an admin user. The admin status has to be manually changed on the database.
