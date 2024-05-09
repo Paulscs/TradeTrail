@@ -7,6 +7,7 @@ package model;
         private String password;
         private String mobile;
         private final boolean admin;
+        private String address;
     // Constructors, getters, and setters
 
 
@@ -26,6 +27,15 @@ package model;
         this.mobile = mobile;
         this.admin = admin;
     }
+
+    public User(int id, String username, String email, String password, String mobile, boolean admin, String address) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.mobile = mobile;
+        this.admin = admin;
+        this.address = address;
+        }
 
     // Getters and setter methods
     public int getId() {
@@ -71,5 +81,14 @@ package model;
     public boolean isAdmin() {
         return admin;
     }
+
+    public String getAddress(){
+        return address;
+    }
+
+    public void setAddress(String address){
+        this.address = address;
+    }
+
 
 }

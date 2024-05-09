@@ -26,5 +26,4 @@ public class SellServlet extends HttpServlet {
         request.setAttribute("categories", categories);
         request.getRequestDispatcher("/sell.jsp").forward(request, response);
     }
-
 }

@@ -18,14 +18,11 @@ public class AdminServlet extends HttpServlet {
         getServletContext().setAttribute("itemDAO", itemDAO);
     }
 
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ItemDAO itemDAO = (ItemDAO) getServletContext().getAttribute("itemDAO");
 
         // Retrieve all products from db
         List<Item> products2 = itemDAO.getAllItems2();
-        System.out.println("Products retrieved in admin servlet: " + products2);
-
 
         request.setAttribute("products2", products2);
         request.getRequestDispatcher("/admin.jsp").forward(request, response);

@@ -78,14 +78,15 @@
 		<tr>
 			<th>ID</th>
 			<th>Title</th>
-			<th>Category</th>
+			<th>Category ID</th>
+			<th>Category Name</th>
 			<th>Description</th>
 			<th>Price</th>
 			<th>Actions</th>
 		</tr>
 		</thead>
 		<tbody>
-		<!-- Loop through product data to fill up the table rows -->
+		<!-- loop through product data to fill up the table rows -->
 		<%
 			Object products2 = request.getAttribute("products2");
 			if (products2 instanceof List) {
@@ -98,7 +99,6 @@
 			<td><%= item.getCategoryId() %></td>
 			<td><%= item.getDescription() %></td>
 			<td><%= item.getPrice() %></td>
-			<!-- Add buttons for delete and edit actions -->
 			<td>
 				<button class="btn btn-danger delete-btn" data-id="<%= item.getItemId() %>" onclick="deleteItem(<%= item.getItemId() %>)">Delete</button>
 				<button class="btn btn-primary edit-btn" data-id="<%= item.getItemId() %>">Edit</button>
@@ -196,20 +196,18 @@
 
 	<script>
 		$(document).ready(function () {
-			// Edit button click event handler
+
 			$('.edit-btn').click(function () {
 				var itemId = $(this).data('id');
 
-				// AJAX request to fetch item details
 				$.ajax({
 					type: 'GET',
-					url: '/updateItem', // Update the URL to your servlet endpoint
+					url: '/updateItem',
 					data: {itemId: itemId},
 					success: function (response) {
-						// Populate form fields with item details
 						$('#editItemId').val(response.itemId);
-						$('#editTitle').val(response.title);
-						$('#editCategory').val(response.categoryId); // Assuming you have categoryId in the response
+						$('#editTitle').val(response.productName);
+						$('#editCategory').val(response.categoryId); 
 						$('#editDescription').val(response.description);
 						$('#editPrice').val(response.price);
 
@@ -217,29 +215,23 @@
 						$('#editForm').show();
 					},
 					error: function () {
-						alert('Failed to fetch item details.');
+						alert('Failed to fetch item details');
 					}
 				});
 			});
 
-			// Save edit button click event handler
 			$('#saveEdit').click(function () {
-				// Serialize form data
 				var formData = $('#editForm').serialize();
 
-				// AJAX request to update item
 				$.ajax({
 					type: 'POST',
-					url: '/updateItem', // Update the URL to your servlet endpoint
+					url: '/updateItem',
 					data: formData,
 					success: function (response) {
-						// Handle success
 						console.log('Item updated successfully');
-						// Optionally, redirect to another page or update UI
 					},
 					error: function () {
-						// Handle error
-						alert('Failed to update item.');
+						alert('Failed to update item');
 					}
 				});
 			});

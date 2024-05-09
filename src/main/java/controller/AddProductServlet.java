@@ -29,7 +29,7 @@ public class AddProductServlet extends HttpServlet {
         itemDAO = new ItemDAO();
     }
 
-    //method to correctly store image and the
+    //method to correctly store image
     protected String saveImageAndGetUrl(HttpServletRequest request) throws IOException, ServletException {
         Part filePart = request.getPart("image");
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
@@ -54,24 +54,21 @@ public class AddProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Retrieve form data
+            // get the data from the sell.jsp form
             String productName = request.getParameter("productName");
             String categoryName = request.getParameter("category");
             String description = request.getParameter("description");
             double price = Double.parseDouble(request.getParameter("price"));
             String imageUrl = saveImageAndGetUrl(request);
 
-            // Retrieve user ID from session
+            // get userid from session
             HttpSession session = request.getSession();
             int userId = (int) session.getAttribute("userId");
 
-            // Get category ID using ItemDAO instance
             int categoryId = itemDAO.getCategoryIdByName(categoryName);
 
-            // Create Item object
             Item item = new Item(userId, productName, categoryId, description, price, imageUrl);
 
-            // Insert item into database
             boolean success = itemDAO.insertItem(item);
 
             // Redirect with success or error message

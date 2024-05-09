@@ -51,6 +51,11 @@
 									placeholder="Contact no" />
 							</div>
 							<div class="form-group">
+								<label for="address"><i class="zmdi zmdi-lock-outline"></i></label>
+								<input type="text" name="address" id="address"
+									   placeholder="Address" />
+							</div>
+							<div class="form-group">
 								<input type="checkbox" name="agree-term" id="agree-term"
 									class="agree-term" /> <label for="agree-term"
 									class="label-agree-term"><span><span></span></span>I

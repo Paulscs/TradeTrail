@@ -26,8 +26,9 @@ public class RegistrationServlet extends HttpServlet {
         String uemail = request.getParameter("email");
         String upwd = request.getParameter("pass");
         String umobile = request.getParameter("contact");
+        String address = request.getParameter("address");
 
-        User user = new User(uname, uemail, upwd, umobile, false);
+        User user = new User(0, uname, uemail, upwd, umobile, false, address);
 
         try {
             boolean success = userDAO.insertUser(user);

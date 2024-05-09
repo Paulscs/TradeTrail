@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Date;
-
 public class Item {
     private int itemId; // set to incremental in mysql
     private User user; // Reference to the User who posted the item
@@ -118,5 +116,10 @@ public class Item {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void getCategoryName() {
+        this.categoryName = categoryName;
+    }
+
 
 }

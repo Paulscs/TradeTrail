@@ -16,7 +16,7 @@ public class UserDAO {
     private String jdbcUsername = "root";
     private String jdbcPassword = "paul0409!";
 
-    private static final String INSERT_USERS_SQL = "INSERT INTO users (username, uemail, password, umobile) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_USERS_SQL = "INSERT INTO users (username, uemail, password, umobile, address) VALUES (?, ?, ?, ?, ?)";
     private static final String SELECT_USER_BY_USERNAME_AND_PASSWORD = "SELECT * FROM users WHERE username = ? AND password = ?";
 
     public UserDAO() {
@@ -41,6 +41,7 @@ public class UserDAO {
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setString(4, user.getMobile());
+            preparedStatement.setString(5, user.getAddress());
 
             rowInserted = preparedStatement.executeUpdate() > 0;
         }

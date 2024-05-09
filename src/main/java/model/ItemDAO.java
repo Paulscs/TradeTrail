@@ -17,7 +17,7 @@ public class ItemDAO {
     private static final String SELECT_ALL_ITEMS_SQL = "SELECT * FROM items";
     private static final String SELECT_CATEGORY_ID_BY_NAME_SQL = "SELECT category_id FROM categories WHERE name = ?";
     private static final String SELECT_ALL_CATEGORIES = "SELECT name FROM categories";
-
+    private static final String SELECT_JOIN = "SELECT i.item_id, i.user_id, i.category_id, i.title, i.description, i.price, i.image_url, c.name " + "FROM items i " + "JOIN categories c ON i.category_id = c.category_id";
     public ItemDAO() {
     }
 
@@ -125,11 +125,9 @@ public class ItemDAO {
     //method to try and get the category name on the data table. NOT RETRIEVING ITEMS YET
     public List<Item> getAllItemsWithCategoryName() {
         List<Item> items = new ArrayList<>();
-        String sql = "SELECT i.item_id, i.user_id, i.category_id, i.title, i.description, i.price, i.image_url, c.name " +
-                "FROM items i " +
-                "JOIN categories c ON i.category_id = c.category_id";
+
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_JOIN);
              ResultSet rs = preparedStatement.executeQuery()) {
             while (rs.next()) {
                 int itemId = rs.getInt("item_id");
@@ -139,7 +137,7 @@ public class ItemDAO {
                 String description = rs.getString("description");
                 double price = rs.getDouble("price");
                 String imageUrl = rs.getString("image_url");
-                String categoryName = rs.getString("category_name");
+                String categoryName = rs.getString("name");
 
                 Item item = new Item(itemId, userId, productName, categoryId, description, price, imageUrl, categoryName);
                 items.add(item);
@@ -198,7 +196,7 @@ public class ItemDAO {
         return item;
     }
 
-    // Method to update an item in the database
+    // Method to update an item in the db
     public boolean updateItem(Item item) {
         String UPDATE_ITEM_SQL = "UPDATE items SET user_id = ?, category_id = ?, title = ?, description = ?, price = ?, image_url = ? WHERE item_id = ?";
 

@@ -14,17 +14,16 @@ import model.ItemDAO;
 public class UpdateItemServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get the item ID from the request parameter
+        // get itemID from the request parameter
         int itemId = Integer.parseInt(request.getParameter("itemId"));
 
-        // Fetch item details from the database using the ItemDAO
+        // fetch item details from db
         ItemDAO itemDAO = new ItemDAO();
         Item item = itemDAO.getItemById(itemId);
 
-        // Convert the item object to JSON
+        // Convert object to json
         String json = new Gson().toJson(item);
 
-        // Set the content type and write JSON response
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
@@ -38,27 +37,26 @@ public class UpdateItemServlet extends HttpServlet {
         double price = Double.parseDouble(request.getParameter("price"));
         String imageUrl = request.getParameter("image_url");
 
-        // Retrieve the item from the database
+
+        // get specific item from db
         ItemDAO itemDAO = (ItemDAO) getServletContext().getAttribute("itemDAO");
         Item item = itemDAO.getItemById(itemIdToUpdate);
 
-        // Update the item with the new values
+        // update the item with the new values
         item.setProductName(title);
         item.setCategoryId(categoryId);
         item.setDescription(description);
         item.setPrice(price);
         item.setImageUrl(imageUrl);
 
-        // Update the item in the database
+
         boolean updateSuccess = itemDAO.updateItem(item);
 
-        // Handle success or failure
         if (updateSuccess) {
             System.out.println("Item updated successfully with ID: " + itemIdToUpdate);
         } else {
             System.out.println("Failed to update item with ID: " + itemIdToUpdate);
         }
-        // Redirect or forward as needed
     }
 
 }
