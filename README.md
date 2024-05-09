@@ -6,18 +6,17 @@ TradeTrail is an online marketplace application built with Java EE (Enterprise E
 
 - **User Authentication:** Users can register, log in, and log out securely. Admin users have access to additional features like managing products.
 - **Product Management:** Admin users can add, edit, and delete products. Regular users can browse products, view details, and make purchases.
-- **Responsive Design:** The application is designed to be responsive, ensuring a seamless experience across devices of all sizes.
 - **Database Integration:** TradeTrail integrates with a database backend for storing user information, product details, and transaction history.
 
 ## Technologies Used
 
-- **Java EE:** Utilized for building the backend logic and handling server-side operations.
-- **Jakarta Servlets:** Used for handling HTTP requests and responses, implementing the application's servlets.
-- **JSP (JavaServer Pages):** Employed for generating dynamic web content and rendering HTML pages with embedded Java code.
-- **MySQL:** Chosen as the database management system for storing user data, product information, and other application data.
-- **HTML/CSS/JavaScript:** Utilized for building the frontend interface and implementing client-side interactivity.
-- **Bootstrap:** Leveraged for designing responsive and mobile-friendly web pages with pre-designed components.
-- **jQuery:** Used for simplifying DOM manipulation, event handling, and making AJAX requests to the server.
+- **Java EE** 
+- **Jakarta Servlets**
+- **JSP (JavaServer Pages)** 
+- **MySQL** 
+- **HTML/CSS/JavaScript** 
+- **Bootstrap** 
+- **jQuery** 
 
 ## Setup Instructions
 
